@@ -4,7 +4,7 @@ import com.yuntongxun.acd.group.AcdGroup;
 
 import java.util.Collection;
 
-public interface AcdServer {
+public interface AcdCenter {
 
     void putGroup(AcdGroup acdGroup);
 
