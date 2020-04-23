@@ -4,7 +4,7 @@ public abstract class LineServant {
 
     private String servantId;
 
-    private boolean active;
+    private boolean active = ACTIVE;
 
     public static boolean ACTIVE = true;
     public static boolean NOTACTIVE = false;
@@ -23,5 +23,13 @@ public abstract class LineServant {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "LineServant{" +
+                "servantId='" + servantId + '\'' +
+                ", active=" + active +
+                '}';
     }
 }

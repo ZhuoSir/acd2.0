@@ -1,14 +1,18 @@
 package com.yuntongxun.acd.context;
 
 import com.yuntongxun.acd.call.CallLineServantProcess;
+import com.yuntongxun.acd.distribute.AbstractServantDistributor;
 import com.yuntongxun.acd.distribute.ServantDistributor;
+import com.yuntongxun.acd.group.AcdGroup;
+import com.yuntongxun.acd.proxy.ServiceProxy;
+import com.yuntongxun.acd.queue.AbstractLineElementQueue;
 import com.yuntongxun.acd.queue.LineElementQueue;
 
 public abstract class AbstractAcdContext implements AcdContext {
 
-    protected LineElementQueue lineElementQueue;
+    protected AbstractLineElementQueue lineElementQueue;
 
-    protected ServantDistributor servantDistributor;
+    protected AbstractServantDistributor servantDistributor;
 
     protected CallLineServantProcess callLineServantProcess;
 
@@ -18,13 +22,41 @@ public abstract class AbstractAcdContext implements AcdContext {
 
     private boolean sychSymbol;
 
-    private CustomerProxy customerProxy;
+    private AcdGroup acdGroup;
 
-    public void setLineElementQueue(LineElementQueue lineElementQueue) {
+    public AbstractAcdContext() {
+    }
+
+    public AbstractAcdContext(ServiceProxy serviceProxy, AcdGroup acdGroup) {
+        this.serviceProxy = serviceProxy;
+        this.acdGroup     = acdGroup;
+    }
+
+    public AbstractAcdContext(AbstractLineElementQueue lineElementQueue,
+                              AbstractServantDistributor servantDistributor,
+                              CallLineServantProcess callLineServantProcess,
+                              ServiceProxy serviceProxy) {
+        this.lineElementQueue = lineElementQueue;
+        this.servantDistributor = servantDistributor;
+        this.callLineServantProcess = callLineServantProcess;
+        this.serviceProxy = serviceProxy;
+
+        init();
+    }
+
+    private void init() {
+        if (serviceProxy != null) {
+            this.lineElementQueue.setQueueNotifyProxy(serviceProxy);
+        }
+    }
+
+    private ServiceProxy serviceProxy;
+
+    public void setLineElementQueue(AbstractLineElementQueue lineElementQueue) {
         this.lineElementQueue = lineElementQueue;
     }
 
-    public void setServantDistributor(ServantDistributor servantDistributor) {
+    public void setServantDistributor(AbstractServantDistributor servantDistributor) {
         this.servantDistributor = servantDistributor;
     }
 
@@ -45,6 +77,11 @@ public abstract class AbstractAcdContext implements AcdContext {
     @Override
     public CallLineServantProcess getCallLineServantProcess() {
         return callLineServantProcess;
+    }
+
+    @Override
+    public ServiceProxy getServiceProxy() {
+        return serviceProxy;
     }
 
     @Override
@@ -74,7 +111,16 @@ public abstract class AbstractAcdContext implements AcdContext {
         this.sychSymbol = sychSymbol;
     }
 
-    public void setCustomerProxy(CustomerProxy customerProxy) {
-        this.customerProxy = customerProxy;
+    public void setServiceProxy(ServiceProxy serviceProxy) {
+        this.serviceProxy = serviceProxy;
+    }
+
+    public void setAcdGroup(AcdGroup acdGroup) {
+        this.acdGroup = acdGroup;
+    }
+
+    @Override
+    public AcdGroup whichAcdGroup() {
+        return acdGroup;
     }
 }

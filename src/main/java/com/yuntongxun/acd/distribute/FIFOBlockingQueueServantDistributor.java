@@ -8,13 +8,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class BlockingQueueServantDistributor extends AbstractServantDistributor {
+public class FIFOBlockingQueueServantDistributor extends AbstractServantDistributor {
 
     private BlockingQueue<LineServant> lineServantBlockingQueue;
 
     private Map<String, LineServant> lineServantTable;
 
-    public BlockingQueueServantDistributor() {
+    public FIFOBlockingQueueServantDistributor() {
         lineServantBlockingQueue = new LinkedBlockingQueue<>();
         lineServantTable = new ConcurrentHashMap<>();
     }

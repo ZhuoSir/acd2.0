@@ -8,7 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class BlockingLineElementQueue extends AbstractLineElementQueue {
+public class FIFOBlockingLineElementQueue extends AbstractLineElementQueue {
 
     // 等待队列
     protected BlockingQueue<LineElement> waitingQueue;
@@ -18,7 +18,7 @@ public class BlockingLineElementQueue extends AbstractLineElementQueue {
     protected Queue<LineElement> priorityQueue;
 
 
-    public BlockingLineElementQueue() {
+    public FIFOBlockingLineElementQueue() {
         waitingQueue        = new LinkedBlockingQueue<>();
         priorityQueue       = new ConcurrentLinkedQueue<>();
         processFailedQueue  = new ConcurrentLinkedQueue<>();

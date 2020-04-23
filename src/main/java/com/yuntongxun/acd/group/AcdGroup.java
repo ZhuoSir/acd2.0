@@ -1,14 +1,17 @@
 package com.yuntongxun.acd.group;
 
 import com.yuntongxun.acd.common.LineElement;
+import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.distribute.DistributeSupport;
 import com.yuntongxun.acd.process.AcdProcessor;
 import com.yuntongxun.acd.queue.QueueSupport;
 
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-public abstract class AcdGroup implements QueueSupport, ThreadFactory, AcdGroupBoostrap {
+public abstract class AcdGroup implements QueueSupport, DistributeSupport, ThreadFactory, AcdGroupBoostrap {
 
     private ExecutorService threadPool;
 
@@ -56,6 +59,26 @@ public abstract class AcdGroup implements QueueSupport, ThreadFactory, AcdGroupB
 
     public void lineProcess() {
         threadPool.submit(acdProcessor);
+    }
+
+    @Override
+    public void addLineServant(LineServant lineServant) {
+        acdProcessor.addLineServant(lineServant);
+    }
+
+    @Override
+    public void addLineServants(Collection<LineServant> lineServants) {
+        acdProcessor.addLineServants(lineServants);
+    }
+
+    @Override
+    public Collection<LineServant> lineServantList() {
+        return acdProcessor.lineServantList();
+    }
+
+    @Override
+    public void remove(String servantId) {
+        acdProcessor.remove(servantId);
     }
 
     public Thread newThread(Runnable r) {

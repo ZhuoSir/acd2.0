@@ -4,6 +4,23 @@ public abstract class LineElement {
 
     public abstract String index();
 
+    protected String groupId;
+
+    public LineElement() {
+    }
+
+    public LineElement(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
     private int waitingCount;
 
     public void setWaitingCount(int waitingCount) {
@@ -17,8 +34,8 @@ public abstract class LineElement {
     @Override
     public String toString() {
         return "LineElement{" +
-                "id=" + index() +
-                "waitingCount=" + waitingCount +
+                "groupId='" + groupId + '\'' +
+                ", waitingCount=" + waitingCount +
                 '}';
     }
 
@@ -26,6 +43,7 @@ public abstract class LineElement {
         LineElementInfo info = new LineElementInfo();
         info.setIndex(index());
         info.setWaitingCount(waitingCount);
+        info.setGroupId(groupId);
         return info;
     }
 }

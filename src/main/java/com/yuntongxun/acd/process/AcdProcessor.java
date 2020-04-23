@@ -3,26 +3,30 @@ package com.yuntongxun.acd.process;
 import com.yuntongxun.acd.call.CallLineServantProcess;
 import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.context.AbstractAcdContext;
 import com.yuntongxun.acd.context.AcdContext;
+import com.yuntongxun.acd.distribute.DistributeSupport;
 import com.yuntongxun.acd.distribute.ServantDistributor;
 import com.yuntongxun.acd.queue.LineElementQueue;
 import com.yuntongxun.acd.queue.QueueSupport;
 
 import java.io.Closeable;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public abstract class AcdProcessor implements AcdProcess, QueueSupport, Runnable {
+public abstract class AcdProcessor implements AcdProcess, QueueSupport, DistributeSupport, Runnable {
 
     private ExecutorService threadPool;
     private String threadPoolName;
 
-    protected AcdContext acdContext;
+    protected AbstractAcdContext acdContext;
 
     public AcdProcessor() {
     }
 
-    public AcdProcessor(AcdContext acdContext) {
+    public AcdProcessor(AbstractAcdContext acdContext) {
         this.acdContext = acdContext;
     }
 
@@ -71,16 +75,23 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Runnable
             final LineServant theLineServantTemp = theLineServant;
             if (null != theLineServantTemp && theLineServantTemp.isActive()) {
                 final LineElement theLineElement = lineElementQueue.get();
-                lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
-                if (acdContext.isCallable()) {
-                    if (acdContext.isSycn() || Objects.isNull(threadPool)) {
-                        callProcess(theLineElement, theLineServantTemp);
-                    } else {
-                        threadPool.submit(new Runnable() {
-                            public void run() {
-                                callProcess(theLineElement, theLineServantTemp);
+                if (theLineElement != null) {
+                    lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
+                    // 置忙
+                    theLineServantTemp.setActive(LineServant.NOTACTIVE);
+                    if (acdContext.isCallable()) {
+                        if (acdContext.isSycn()) {
+                            callProcess(theLineElement, theLineServantTemp);
+                        } else {
+                            if (null == threadPool) {
+                                threadPool = Executors.newCachedThreadPool();
                             }
-                        });
+                            threadPool.submit(new Runnable() {
+                                public void run() {
+                                    callProcess(theLineElement, theLineServantTemp);
+                                }
+                            });
+                        }
                     }
                 }
             }

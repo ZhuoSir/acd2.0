@@ -4,6 +4,8 @@ public class LineElementInfo {
 
     private int waitingCount;
 
+    private String groupId;
+
     private String index;
 
     public int getWaitingCount() {
@@ -22,10 +24,19 @@ public class LineElementInfo {
         this.index = index;
     }
 
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
     @Override
     public String toString() {
         return "LineElementInfo{" +
                 "waitingCount=" + waitingCount +
+                ", groupId='" + groupId + '\'' +
                 ", index='" + index + '\'' +
                 '}';
     }
