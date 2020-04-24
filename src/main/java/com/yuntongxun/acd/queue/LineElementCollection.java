@@ -4,6 +4,6 @@ import com.yuntongxun.acd.common.LineElement;
 
 public interface LineElementCollection {
 
-    LineElement get();
+    LineElement get() throws Exception;
 
 }
