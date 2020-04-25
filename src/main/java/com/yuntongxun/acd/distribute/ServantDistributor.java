@@ -11,7 +11,7 @@ public interface ServantDistributor {
 
     void add(LineServant lineServant);
 
-    void addLineServants(Collection<LineServant> lineServants);
+    void add(Collection<LineServant> lineServants);
 
     Collection<LineServant> lineServantList();
 

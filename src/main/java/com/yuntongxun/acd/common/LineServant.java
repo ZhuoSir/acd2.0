@@ -9,6 +9,10 @@ public abstract class LineServant {
     public static boolean ACTIVE = true;
     public static boolean NOTACTIVE = false;
 
+    public LineServant(String servantId) {
+        this.servantId = servantId;
+    }
+
     public String getServantId() {
         return servantId;
     }

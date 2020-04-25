@@ -10,8 +10,20 @@ public class Customer extends LineElement {
         this.index = index;
     }
 
+    public Customer(String index, String groupId) {
+        super.groupId = groupId;
+        this.index = index;
+    }
+
     @Override
     public String index() {
         return index;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "index='" + index + '\'' +
+                '}';
     }
 }

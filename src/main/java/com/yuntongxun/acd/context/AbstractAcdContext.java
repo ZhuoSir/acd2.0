@@ -27,11 +27,6 @@ public abstract class AbstractAcdContext implements AcdContext {
     public AbstractAcdContext() {
     }
 
-    public AbstractAcdContext(ServiceProxy serviceProxy, AcdGroup acdGroup) {
-        this.serviceProxy = serviceProxy;
-        this.acdGroup     = acdGroup;
-    }
-
     public AbstractAcdContext(AbstractLineElementQueue lineElementQueue,
                               AbstractServantDistributor servantDistributor,
                               CallLineServantProcess callLineServantProcess,
@@ -46,7 +41,9 @@ public abstract class AbstractAcdContext implements AcdContext {
 
     private void init() {
         if (serviceProxy != null) {
-            this.lineElementQueue.setQueueNotifyProxy(serviceProxy);
+            if (this.lineElementQueue != null) {
+                this.lineElementQueue.setQueueNotifyProxy(serviceProxy);
+            }
         }
     }
 

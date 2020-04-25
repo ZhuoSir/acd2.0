@@ -40,7 +40,7 @@ public class FIFOBlockingQueueServantDistributor extends AbstractServantDistribu
     }
 
     @Override
-    public void addLineServants(Collection<LineServant> lineServants) {
+    public void add(Collection<LineServant> lineServants) {
         lineServantBlockingQueue.addAll(lineServants);
         for (LineServant lineServant : lineServants) {
             lineServantTable.put(lineServant.getServantId(), lineServant);

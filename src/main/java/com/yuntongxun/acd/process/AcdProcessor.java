@@ -74,25 +74,29 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
 
             final LineServant theLineServantTemp = theLineServant;
             if (null != theLineServantTemp && theLineServantTemp.isActive()) {
-                final LineElement theLineElement = lineElementQueue.get();
-                if (theLineElement != null) {
-                    lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
-                    // 置忙
-                    theLineServantTemp.setActive(LineServant.NOTACTIVE);
-                    if (acdContext.isCallable()) {
-                        if (acdContext.isSycn()) {
-                            callProcess(theLineElement, theLineServantTemp);
-                        } else {
-                            if (null == threadPool) {
-                                threadPool = Executors.newCachedThreadPool();
-                            }
-                            threadPool.submit(new Runnable() {
-                                public void run() {
-                                    callProcess(theLineElement, theLineServantTemp);
+                try {
+                    final LineElement theLineElement = lineElementQueue.get();
+                    if (theLineElement != null) {
+                        lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
+                        // 置忙
+                        theLineServantTemp.setActive(LineServant.NOTACTIVE);
+                        if (acdContext.isCallable()) {
+                            if (acdContext.isSycn()) {
+                                callProcess(theLineElement, theLineServantTemp);
+                            } else {
+                                if (null == threadPool) {
+                                    threadPool = Executors.newCachedThreadPool();
                                 }
-                            });
+                                threadPool.submit(new Runnable() {
+                                    public void run() {
+                                        callProcess(theLineElement, theLineServantTemp);
+                                    }
+                                });
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
