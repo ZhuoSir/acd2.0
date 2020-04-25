@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ComparaSortBlockingQueueServantDistributor<E extends Comparable> extends AbstractServantDistributor {
+public class ComparaSortBlockingQueueServantDistributor extends AbstractServantDistributor {
 
     private ReentrantLock lock;
     private Comparator    comparator;
