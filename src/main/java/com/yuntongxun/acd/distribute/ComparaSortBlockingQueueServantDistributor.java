@@ -74,7 +74,7 @@ public class ComparaSortBlockingQueueServantDistributor<E extends Comparable> ex
     public void remove(String servantId) {
         final ReentrantLock lock = this.lock;
         try {
-            lock.unlock();
+            lock.lock();
             LineServant lineServant = lineServantTable.remove(servantId);
             lineServantBlockingQueue.remove(lineServant);
         } finally {
