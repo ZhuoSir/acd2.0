@@ -77,7 +77,6 @@ public class ComparaSortBlockingQueueServantDistributor<E extends Comparable> ex
             lock.unlock();
             LineServant lineServant = lineServantTable.remove(servantId);
             lineServantBlockingQueue.remove(lineServant);
-            // 排队逻辑
         } finally {
             lock.unlock();
         }
