@@ -26,7 +26,9 @@ public class ComparaSortBlockingQueueServantDistributor extends AbstractServantD
     @Override
     public LineServant distribute() {
         try {
-            return lineServantBlockingQueue.take();
+            LineServant lineServant = lineServantBlockingQueue.take();
+            lineServantTable.remove(lineServant.getServantId());
+            return lineServant;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
