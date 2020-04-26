@@ -16,4 +16,6 @@ public interface ServantDistributor {
     Collection<LineServant> lineServantList();
 
     void remove(String servantId);
+
+    LineServant lineServantInfo(String servantId);
 }

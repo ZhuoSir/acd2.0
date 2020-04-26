@@ -1,36 +1,50 @@
 package com.yuntongxun.acd.distribute;
 
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.distribute.comparator.LineServantComparator;
 
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ComparaSortBlockingQueueServantDistributor extends AbstractServantDistributor {
+public class ComparaSortBlockingListServantDistributor extends AbstractServantDistributor {
 
-    private ReentrantLock lock;
-    private Comparator    comparator;
+    private ReentrantLock         lock;
+    private LineServantComparator comparator;
+    private Condition             unEmpty;
 
-    private BlockingQueue<LineServant> lineServantBlockingQueue;
+    private List<LineServant> lineServantList;
     private Map<String, LineServant>   lineServantTable;
 
-    public ComparaSortBlockingQueueServantDistributor(Comparator comparator) {
+
+    public ComparaSortBlockingListServantDistributor(LineServantComparator comparator) {
         this.comparator               = comparator;
-        this.lineServantBlockingQueue = new LinkedBlockingQueue<>();
+        this.lineServantList          = new LinkedList<>();
         this.lock                     = new ReentrantLock();
         this.lineServantTable         = new ConcurrentHashMap<>();
+        this.unEmpty                  = this.lock.newCondition();
     }
 
     @Override
     public LineServant distribute() {
+        final ReentrantLock lock = this.lock;
+        LineServant lineServant;
         try {
-            LineServant lineServant = lineServantBlockingQueue.take();
+            lock.lock();
+            do {
+                if (this.lineServantList.isEmpty()) {
+                    unEmpty.await();
+                }
+                lineServant = this.lineServantList.remove(0);
+            } while (lineServant == null);
+
             lineServantTable.remove(lineServant.getServantId());
             return lineServant;
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            lock.unlock();
         }
 
         return null;
@@ -41,10 +55,10 @@ public class ComparaSortBlockingQueueServantDistributor extends AbstractServantD
         final ReentrantLock lock = this.lock;
         try {
             lock.lock();
-            lineServantBlockingQueue.add(lineServant);
+            lineServantList.add(lineServant);
             lineServantTable.put(lineServant.getServantId(), lineServant);
-            // 排队逻辑
             sort();
+            unEmpty.signal();
         } finally {
             lock.unlock();
         }
@@ -55,13 +69,13 @@ public class ComparaSortBlockingQueueServantDistributor extends AbstractServantD
         final ReentrantLock lock = this.lock;
         try {
             lock.lock();
-            lineServantBlockingQueue.addAll(lineServants);
+            lineServantList.addAll(lineServants);
             for (LineServant lineServant : lineServants) {
                 lineServantTable.put(lineServant.getServantId(), lineServant);
             }
 
-            // 排队逻辑
             sort();
+            unEmpty.signal();
         } finally {
             lock.unlock();
         }
@@ -69,7 +83,7 @@ public class ComparaSortBlockingQueueServantDistributor extends AbstractServantD
 
     @Override
     public Collection<LineServant> lineServantList() {
-        return lineServantBlockingQueue;
+        return lineServantList;
     }
 
     @Override
@@ -78,19 +92,20 @@ public class ComparaSortBlockingQueueServantDistributor extends AbstractServantD
         try {
             lock.lock();
             LineServant lineServant = lineServantTable.remove(servantId);
-            lineServantBlockingQueue.remove(lineServant);
+            lineServantList.remove(lineServant);
         } finally {
             lock.unlock();
         }
     }
 
     private void sort() {
-        LineServant[] servantsBeforeSort = new LineServant[lineServantBlockingQueue.size()];
-        servantsBeforeSort = lineServantBlockingQueue.toArray(servantsBeforeSort);
+        if (!lineServantList.isEmpty()) {
+            Collections.sort(lineServantList, comparator);
+        }
+    }
 
-        List<LineServant> servantListBeforeSort = Arrays.asList(servantsBeforeSort);
-        Collections.sort(servantListBeforeSort, comparator);
-
-        lineServantBlockingQueue = new LinkedBlockingQueue<>(servantListBeforeSort);
+    @Override
+    public LineServant lineServantInfo(String servantId) {
+        return lineServantTable.get(servantId);
     }
 }

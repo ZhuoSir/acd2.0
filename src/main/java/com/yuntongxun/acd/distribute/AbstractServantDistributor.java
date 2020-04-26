@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.distribute;
 
-public abstract class AbstractServantDistributor implements ServantDistributor {
+import com.yuntongxun.acd.common.LineServant;
 
+public abstract class AbstractServantDistributor implements ServantDistributor {
 
 }

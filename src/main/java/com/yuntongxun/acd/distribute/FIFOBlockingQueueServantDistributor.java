@@ -60,4 +60,9 @@ public class FIFOBlockingQueueServantDistributor extends AbstractServantDistribu
         }
         lineServantTable.remove(servantId);
     }
+
+    @Override
+    public LineServant lineServantInfo(String servantId) {
+        return lineServantTable.get(servantId);
+    }
 }
