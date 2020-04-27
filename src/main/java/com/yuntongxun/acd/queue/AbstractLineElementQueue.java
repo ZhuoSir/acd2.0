@@ -24,6 +24,7 @@ public abstract class AbstractLineElementQueue implements LineElementQueue {
     @Override
     public void elementDistributed(LineElement lineElement, LineServant lineServant) {
 
+        lineServant.setDistributeTimes(lineServant.getDistributeTimes() + 1);
         LineDistributePart lineDistributePart = new LineDistributePart(lineElement, lineServant);
         String distributeId = lineElement.index() + "-" + lineServant.getServantId();
         distributePartTable.put(distributeId, lineDistributePart);

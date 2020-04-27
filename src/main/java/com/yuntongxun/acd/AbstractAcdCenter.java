@@ -81,4 +81,9 @@ public abstract class AbstractAcdCenter implements AcdCenter {
         AcdGroup acdGroup = acdGroupTable.get(groupName);
         acdGroup.close();
     }
+
+    @Override
+    public AcdGroup getGroup(String groupName) {
+        return acdGroupTable.get(groupName);
+    }
 }

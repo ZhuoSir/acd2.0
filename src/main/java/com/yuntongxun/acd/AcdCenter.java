@@ -14,6 +14,8 @@ public interface AcdCenter {
 
     void removeGroup(String groupName);
 
+    AcdGroup getGroup(String groupName);
+
     void putGroupAndStart(Collection<AcdGroup> acdGroupCollection);
 
     void removeGroupAndStop(Collection<String> groupNames);

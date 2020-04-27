@@ -9,6 +9,16 @@ public abstract class LineServant {
     public static boolean ACTIVE = true;
     public static boolean NOTACTIVE = false;
 
+    public int distributeTimes;
+
+    public void setDistributeTimes(int distributeTimes) {
+        this.distributeTimes = distributeTimes;
+    }
+
+    public int getDistributeTimes() {
+        return distributeTimes;
+    }
+
     public LineServant(String servantId) {
         this.servantId = servantId;
     }
@@ -34,6 +44,7 @@ public abstract class LineServant {
         return "LineServant{" +
                 "servantId='" + servantId + '\'' +
                 ", active=" + active +
+                ", distributeTimes=" + distributeTimes +
                 '}';
     }
 }

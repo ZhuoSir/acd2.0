@@ -19,17 +19,17 @@ public class ComparaSortBlockingListServantDistributor extends AbstractServantDi
 
 
     public ComparaSortBlockingListServantDistributor(LineServantComparator comparator) {
-        this.comparator               = comparator;
-        this.lineServantList          = new LinkedList<>();
-        this.lock                     = new ReentrantLock();
-        this.lineServantTable         = new ConcurrentHashMap<>();
-        this.unEmpty                  = this.lock.newCondition();
+        this.comparator        = comparator;
+        this.lineServantList   = new LinkedList<>();
+        this.lock              = new ReentrantLock();
+        this.lineServantTable  = new ConcurrentHashMap<>();
+        this.unEmpty           = this.lock.newCondition();
     }
 
     @Override
     public LineServant distribute() {
         final ReentrantLock lock = this.lock;
-        LineServant lineServant;
+        LineServant lineServant = null;
         try {
             lock.lock();
             do {
