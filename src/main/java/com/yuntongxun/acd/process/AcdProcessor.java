@@ -78,8 +78,6 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
                     final LineElement theLineElement = lineElementQueue.get();
                     if (theLineElement != null) {
                         lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
-                        // 置忙
-                        theLineServantTemp.setActive(LineServant.NOTACTIVE);
                         if (acdContext.isCallable()) {
                             if (acdContext.isSycn()) {
                                 callProcess(theLineElement, theLineServantTemp);
