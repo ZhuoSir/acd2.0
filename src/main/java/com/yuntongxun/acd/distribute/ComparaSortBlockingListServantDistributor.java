@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Predicate;
 
 public class ComparaSortBlockingListServantDistributor extends AbstractServantDistributor {
 
@@ -52,6 +53,9 @@ public class ComparaSortBlockingListServantDistributor extends AbstractServantDi
 
     @Override
     public void add(LineServant lineServant) {
+        if (lineServant == null)
+            return;
+
         final ReentrantLock lock = this.lock;
         try {
             lock.lock();
@@ -69,13 +73,24 @@ public class ComparaSortBlockingListServantDistributor extends AbstractServantDi
         final ReentrantLock lock = this.lock;
         try {
             lock.lock();
-            lineServantList.addAll(lineServants);
-            for (LineServant lineServant : lineServants) {
-                lineServantTable.put(lineServant.getServantId(), lineServant);
+            lineServants.removeIf(new Predicate<LineServant>() {
+                @Override
+                public boolean test(LineServant lineServant) {
+                    return lineServant == null;
+                }
+            });
+            if (!lineServants.isEmpty()) {
+                lineServantList.addAll(lineServants);
+                for (LineServant lineServant : lineServants) {
+                    if (lineServant != null) {
+                        lineServantTable.put(lineServant.getServantId(), lineServant);
+                    }
+                }
+                sort();
             }
-
-            sort();
-            unEmpty.signal();
+            if (!lineServantList.isEmpty()) {
+                unEmpty.signal();
+            }
         } finally {
             lock.unlock();
         }
