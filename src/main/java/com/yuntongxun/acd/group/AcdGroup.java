@@ -29,7 +29,7 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
         this.acdProcessor = acdProcessor;
         this.groupName = groupName;
         threadPool = Executors.newCachedThreadPool(this);
-        acdProcessor.setThreadPool(groupName + "-lineProcess", threadPool);
+        this.acdProcessor.setThreadPool(groupName + "-lineProcess", threadPool);
         processThread = new Thread(acdProcessor);
     }
 
@@ -87,6 +87,9 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
 
     @Override
     public void start() {
+        if (processThread == null) {
+            processThread = new Thread(acdProcessor);
+        }
         processThread.start();
     }
 
@@ -99,5 +102,6 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
     public void close() {
         if (processThread.isInterrupted())
             processThread.interrupt();
+        processThread = null;
     }
 }
