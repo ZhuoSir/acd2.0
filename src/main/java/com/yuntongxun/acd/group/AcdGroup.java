@@ -100,7 +100,7 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
 
     @Override
     public void close() {
-        if (processThread.isInterrupted())
+        if (!processThread.isInterrupted())
             processThread.interrupt();
         processThread = null;
     }
