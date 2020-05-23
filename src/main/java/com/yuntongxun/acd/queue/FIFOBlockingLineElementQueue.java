@@ -27,7 +27,7 @@ public class FIFOBlockingLineElementQueue extends AbstractLineElementQueue {
         waitingQueue       = new LinkedBlockingQueue<>();
         priorityQueue      = new ConcurrentLinkedQueue<>();
         processFailedQueue = new ConcurrentLinkedQueue<>();
-        lock               = new ReentrantLock();
+        lock               = new ReentrantLock(true);
         unempity           = lock.newCondition();
     }
 

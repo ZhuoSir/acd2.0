@@ -11,18 +11,18 @@ import java.util.function.Predicate;
 
 public class ComparaSortBlockingListServantDistributor extends AbstractServantDistributor {
 
-    private ReentrantLock         lock;
-    private LineServantComparator comparator;
-    private Condition             unEmpty;
+    private ReentrantLock              lock;
+    private LineServantComparator      comparator;
+    private Condition                  unEmpty;
 
-    private List<LineServant> lineServantList;
+    private List<LineServant>          lineServantList;
     private Map<String, LineServant>   lineServantTable;
 
 
     public ComparaSortBlockingListServantDistributor(LineServantComparator comparator) {
         this.comparator        = comparator;
         this.lineServantList   = new LinkedList<>();
-        this.lock              = new ReentrantLock();
+        this.lock              = new ReentrantLock(true);
         this.lineServantTable  = new ConcurrentHashMap<>();
         this.unEmpty           = this.lock.newCondition();
     }
