@@ -58,14 +58,12 @@ public class RedisLineElementQueue extends AbstractLineElementQueue {
     @Override
     public void addProcessFailed(LineElement element) {
         try {
-//            rLock.lock();
             rFailedQueue.offer(element);
             element.setWaitingCount(rFailedQueue.size() - 1);
             if (element.getWaitingCount() < 0) {
                 element.setWaitingCount(0);
             }
         } finally {
-//            rLock.unlock();
         }
     }
 
