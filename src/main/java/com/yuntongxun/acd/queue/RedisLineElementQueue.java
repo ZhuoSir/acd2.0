@@ -76,13 +76,7 @@ public class RedisLineElementQueue extends AbstractLineElementQueue {
 
     @Override
     public Queue<LineElement> getWaitingQueue() {
-        reGetWaitingQueue();
-        System.out.println(rWatingQueue);
         return rWatingQueue;
-    }
-
-    private void reGetWaitingQueue() {
-        rWatingQueue = redisson.getQueue(contextID + "-queue");
     }
 
     @Override

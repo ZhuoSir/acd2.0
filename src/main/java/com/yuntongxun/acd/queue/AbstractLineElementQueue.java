@@ -18,7 +18,7 @@ public abstract class AbstractLineElementQueue implements LineElementQueue {
 
     protected Map<String, LineDistributePart> distributePartTable = new ConcurrentHashMap<>();
 
-    private ExecutorService taskPool = Executors.newCachedThreadPool();
+    private ExecutorService taskPool = null;
 
     private QueueNotifyProxy queueNotifyProxy;
 
@@ -29,6 +29,7 @@ public abstract class AbstractLineElementQueue implements LineElementQueue {
 
     public AbstractLineElementQueue(AbstractAcdContext acdContext) {
         this.acdContext = acdContext;
+        taskPool = Executors.newFixedThreadPool(acdContext.getNotifyThreadPoolSize());
     }
 
     public void setAcdContext(AbstractAcdContext acdContext) {
@@ -43,9 +44,9 @@ public abstract class AbstractLineElementQueue implements LineElementQueue {
     public void elementDistributed(LineElement lineElement, LineServant lineServant) {
         lineServant.setActive(LineServant.NOTACTIVE);
         lineServant.setDistributeTimes(lineServant.getDistributeTimes() + 1);
-        LineDistributePart lineDistributePart = new LineDistributePart(lineElement, lineServant);
-        String distributeId = lineElement.index() + "-" + lineServant.getServantId();
-        distributePartTable.put(distributeId, lineDistributePart);
+//        LineDistributePart lineDistributePart = new LineDistributePart(lineElement, lineServant);
+//        String distributeId = lineElement.index() + "-" + lineServant.getServantId();
+//        distributePartTable.put(distributeId, lineDistributePart);
 
         distributeNotify(lineElement, lineServant);
         queueAdjust();

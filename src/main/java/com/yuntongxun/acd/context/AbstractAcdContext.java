@@ -16,6 +16,8 @@ public abstract class AbstractAcdContext implements AcdContext {
 
     public String ContextId = null;
 
+    private int notifyThreadPoolSize = 10;
+
     public AbstractAcdContext() {
     }
 
@@ -98,5 +100,9 @@ public abstract class AbstractAcdContext implements AcdContext {
 
     public void setSychSymbol(boolean sychSymbol) {
         this.sychSymbol = sychSymbol;
+    }
+
+    public int getNotifyThreadPoolSize() {
+        return notifyThreadPoolSize;
     }
 }
