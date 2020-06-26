@@ -2,7 +2,9 @@ package bean;
 
 import com.yuntongxun.acd.common.LineServant;
 
-public class Agent extends LineServant {
+import java.io.Serializable;
+
+public class Agent extends LineServant implements Serializable {
 
     private int sort;
 
@@ -26,7 +28,8 @@ public class Agent extends LineServant {
     @Override
     public String toString() {
         return "Agent{" +
-                "sort=" + sort +
+                "sevantID=" + getServantId() +
+                ", sort=" + sort +
                 ", distributeTimes=" + distributeTimes +
                 '}';
     }

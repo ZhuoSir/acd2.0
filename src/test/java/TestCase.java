@@ -52,9 +52,9 @@ public class TestCase {
             group1.addLineServant(agent);
         }
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 20; i++) {
             Customer customer = new Customer("C" + i, group1.getGroupName());
-            Thread.sleep(i * 10000);
+//            Thread.sleep(i * 10000);
             group1.line(customer);
         }
 
@@ -77,7 +77,7 @@ public class TestCase {
         }
 
         for (int j = 0; j < 5; j++) {
-            Thread.sleep(1000);
+//            Thread.sleep(1000);
             Agent agent = new Agent("A" + j);
             group3.addLineServant(agent);
         }

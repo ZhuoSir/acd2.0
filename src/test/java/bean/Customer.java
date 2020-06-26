@@ -2,7 +2,11 @@ package bean;
 
 import com.yuntongxun.acd.common.LineElement;
 
-public class Customer extends LineElement {
+import java.io.Serializable;
+
+public class Customer extends LineElement implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     String index;
 

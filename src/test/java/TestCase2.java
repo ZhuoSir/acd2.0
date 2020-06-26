@@ -125,7 +125,6 @@ public class TestCase2 {
                     group1.line(customer);
                 }
             });
-
         }
 
         Collection<LineServant> agents = new ArrayList<>();
@@ -180,9 +179,9 @@ public class TestCase2 {
             @Override
             public int compare(LineServant o1, LineServant o2) {
                 if (o1.getDistributeTimes() < o2.getDistributeTimes()) {
-                    return 1;
-                } else if (o2.getDistributeTimes() < o1.getDistributeTimes()) {
                     return -1;
+                } else if (o2.getDistributeTimes() < o1.getDistributeTimes()) {
+                    return 1;
                 }
                 return 0;
             }
@@ -217,14 +216,19 @@ public class TestCase2 {
                     Agent agent = new Agent("A" + c);
                     agent.setDistributeTimes(worktime);
                     agents.add(agent);
-                    group1.addLineServant(agent);
+//                    group1.addLineServant(agent);
                 }
             });
         }
 
-//        System.out.println(agents);
-//        group1.addLineServants(agents);
-//        System.out.println(group1.lineServantList());
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(agents);
+        group1.addLineServants(agents);
+        System.out.println(group1.lineServantList());
 
         try {
             latch.await();
