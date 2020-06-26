@@ -3,6 +3,7 @@ package com.yuntongxun.acd.queue;
 import com.yuntongxun.acd.common.LineDistributePart;
 import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.context.AbstractAcdContext;
 import com.yuntongxun.acd.queue.bean.QueueNotification;
 
 import java.util.Date;
@@ -20,6 +21,23 @@ public abstract class AbstractLineElementQueue implements LineElementQueue {
     private ExecutorService taskPool = Executors.newCachedThreadPool();
 
     private QueueNotifyProxy queueNotifyProxy;
+
+    private AbstractAcdContext acdContext;
+
+    public AbstractLineElementQueue() {
+    }
+
+    public AbstractLineElementQueue(AbstractAcdContext acdContext) {
+        this.acdContext = acdContext;
+    }
+
+    public void setAcdContext(AbstractAcdContext acdContext) {
+        this.acdContext = acdContext;
+    }
+
+    public AbstractAcdContext getAcdContext() {
+        return acdContext;
+    }
 
     @Override
     public void elementDistributed(LineElement lineElement, LineServant lineServant) {

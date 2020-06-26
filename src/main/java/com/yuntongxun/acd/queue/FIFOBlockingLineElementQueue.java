@@ -2,6 +2,7 @@ package com.yuntongxun.acd.queue;
 
 import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.context.AbstractAcdContext;
 
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
@@ -24,12 +25,22 @@ public class FIFOBlockingLineElementQueue extends AbstractLineElementQueue {
     private Condition     unempity;
 
     public FIFOBlockingLineElementQueue() {
+        init();
+    }
+
+    public FIFOBlockingLineElementQueue(AbstractAcdContext acdContext) {
+        super(acdContext);
+        init();
+    }
+
+    private void init() {
         waitingQueue       = new LinkedBlockingQueue<>();
         priorityQueue      = new ConcurrentLinkedQueue<>();
         processFailedQueue = new ConcurrentLinkedQueue<>();
         lock               = new ReentrantLock(true);
         unempity           = lock.newCondition();
     }
+
 
     public void add(LineElement element) {
         final ReentrantLock lock = this.lock;

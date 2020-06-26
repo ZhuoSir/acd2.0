@@ -57,6 +57,11 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
         acdProcessor.linePriority(lineElement);
     }
 
+    @Override
+    public Collection<LineElement> elements() {
+        return acdProcessor.getLineElementQueue().getWaitingQueue();
+    }
+
     public void lineProcess() {
         threadPool.submit(acdProcessor);
     }

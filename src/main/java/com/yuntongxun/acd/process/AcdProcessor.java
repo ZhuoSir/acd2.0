@@ -5,8 +5,10 @@ import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
 import com.yuntongxun.acd.context.AbstractAcdContext;
 import com.yuntongxun.acd.context.AcdContext;
+import com.yuntongxun.acd.distribute.AbstractServantDistributor;
 import com.yuntongxun.acd.distribute.DistributeSupport;
 import com.yuntongxun.acd.distribute.ServantDistributor;
+import com.yuntongxun.acd.queue.AbstractLineElementQueue;
 import com.yuntongxun.acd.queue.LineElementQueue;
 import com.yuntongxun.acd.queue.QueueSupport;
 
@@ -20,6 +22,10 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
 
     private ExecutorService threadPool;
     private String threadPoolName;
+
+    protected AbstractLineElementQueue lineElementQueue;
+    protected AbstractServantDistributor servantDistributor;
+    protected CallLineServantProcess callLineServantProcess;
 
     protected AbstractAcdContext acdContext;
 
@@ -35,6 +41,18 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
         this.threadPoolName = threadPoolName;
     }
 
+    public void setLineElementQueue(AbstractLineElementQueue lineElementQueue) {
+        this.lineElementQueue = lineElementQueue;
+    }
+
+    public void setServantDistributor(AbstractServantDistributor servantDistributor) {
+        this.servantDistributor = servantDistributor;
+    }
+
+    public void setCallLineServantProcess(CallLineServantProcess callLineServantProcess) {
+        this.callLineServantProcess = callLineServantProcess;
+    }
+
     public void run() {
         if (null != threadPoolName && !"".equals(threadPoolName))
             Thread.currentThread().setName(threadPoolName);
@@ -43,15 +61,15 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
     }
 
     public LineElementQueue getLineElementQueue() {
-        return acdContext.getLineElementQueue();
+        return lineElementQueue;
     }
 
     public ServantDistributor getServantDistributor() {
-        return acdContext.getServantDistributor();
+        return servantDistributor;
     }
 
     public CallLineServantProcess getCallLineServantProcess() {
-        return acdContext.getCallLineServantProcess();
+        return callLineServantProcess;
     }
 
     @Override
@@ -101,7 +119,7 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
     }
 
     private void callProcess(LineElement theLineElement, LineServant theLineServant) {
-        acdContext.getCallLineServantProcess().callProcess(theLineElement, theLineServant);
+        callLineServantProcess.callProcess(theLineElement, theLineServant);
     }
 
     public AcdContext getAcdContext() {

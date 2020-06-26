@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.distribute;
 
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.context.AbstractAcdContext;
 
 import java.util.Collection;
 import java.util.Map;
@@ -15,6 +16,15 @@ public class FIFOBlockingQueueServantDistributor extends AbstractServantDistribu
     private Map<String, LineServant> lineServantTable;
 
     public FIFOBlockingQueueServantDistributor() {
+        init();
+    }
+
+    public FIFOBlockingQueueServantDistributor(AbstractAcdContext acdContext) {
+        super(acdContext);
+        init();
+    }
+
+    private void init() {
         lineServantBlockingQueue = new LinkedBlockingQueue<>();
         lineServantTable = new ConcurrentHashMap<>();
     }

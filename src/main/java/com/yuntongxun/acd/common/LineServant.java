@@ -1,6 +1,10 @@
 package com.yuntongxun.acd.common;
 
-public abstract class LineServant {
+import java.io.Serializable;
+
+public abstract class LineServant implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String servantId;
 

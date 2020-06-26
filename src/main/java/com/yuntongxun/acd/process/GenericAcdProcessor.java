@@ -37,6 +37,10 @@ public class GenericAcdProcessor extends AcdProcessor {
         getLineElementQueue().addPriority(lineElement);
     }
 
+    @Override
+    public Collection<LineElement> elements() {
+        return getLineElementQueue().getWaitingQueue();
+    }
 
     @Override
     public void addLineServant(LineServant lineServant) {

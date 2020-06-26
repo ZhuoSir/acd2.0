@@ -7,10 +7,10 @@ import com.yuntongxun.acd.proxy.ServiceProxy;
 public class FIFOBlockingQueueAcdGroup extends GenericAcdGroup {
 
     public FIFOBlockingQueueAcdGroup(String groupName, ServiceProxy serviceProxy) {
-        super(groupName, new FIFOBlockingQueueAcdProcessor(serviceProxy));
+        super(groupName, new FIFOBlockingQueueAcdProcessor(groupName, serviceProxy));
     }
 
     public FIFOBlockingQueueAcdGroup(String groupName, ServiceProxy serviceProxy, LineServantComparator lineServantComparator) {
-        super(groupName, new FIFOBlockingQueueAcdProcessor(serviceProxy, lineServantComparator));
+        super(groupName, new FIFOBlockingQueueAcdProcessor(groupName, serviceProxy, lineServantComparator));
     }
 }

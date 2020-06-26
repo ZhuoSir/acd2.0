@@ -1,6 +1,7 @@
 package com.yuntongxun.acd.distribute;
 
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.context.AbstractAcdContext;
 import com.yuntongxun.acd.distribute.comparator.LineServantComparator;
 
 import java.util.*;
@@ -20,6 +21,15 @@ public class ComparaSortBlockingListServantDistributor extends AbstractServantDi
 
 
     public ComparaSortBlockingListServantDistributor(LineServantComparator comparator) {
+        init(comparator);
+    }
+
+    public ComparaSortBlockingListServantDistributor(AbstractAcdContext acdContext, LineServantComparator comparator) {
+        super(acdContext);
+        init(comparator);
+    }
+
+    private void init(LineServantComparator comparator) {
         this.comparator        = comparator;
         this.lineServantList   = new LinkedList<>();
         this.lock              = new ReentrantLock(true);
