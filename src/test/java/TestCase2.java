@@ -2,7 +2,11 @@ import bean.Agent;
 import bean.Customer;
 import com.yuntongxun.acd.AcdCenter;
 import com.yuntongxun.acd.GenericAcdCenter;
+import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
+import com.yuntongxun.acd.context.listener.AfterLineAcdContextListener;
+import com.yuntongxun.acd.context.listener.ExceptionAcdContextListener;
+import com.yuntongxun.acd.context.listener.PreLineAcdContextListener;
 import com.yuntongxun.acd.distribute.AbstractServantDistributor;
 import com.yuntongxun.acd.distribute.ComparaSortBlockingListServantDistributor;
 import com.yuntongxun.acd.distribute.comparator.LineServantComparator;
@@ -84,7 +88,7 @@ public class TestCase2 {
                 Agent agent    = (Agent)    queueNotification.getDistributedServant();
 
                 if (queueNotification.getLineStatus() == 0) {
-                    System.out.println("customer :" + customer.index() + "/groupid: " + customer.getGroupId() + "  queue has changed : " + queueNotification.getPreCount());
+//                    System.out.println("customer :" + customer.index() + "/groupid: " + customer.getGroupId() + "  queue has changed : " + queueNotification.getPreCount());
                 } else if (queueNotification.getLineStatus() == 1) {
                     System.out.println("customer :" + customer + " has distributed agent : " + agent);
                 }
@@ -105,6 +109,30 @@ public class TestCase2 {
                 }
 
                 return 0;
+            }
+        });
+
+
+        group1.addAcdContextListener(new PreLineAcdContextListener() {
+            @Override
+            public void preLine(LineElement lineElement) {
+                System.out.println("PreLine1 : " + lineElement);
+            }
+        });
+
+        group1.addAcdContextListener(new AfterLineAcdContextListener() {
+            @Override
+            public void afterLine(LineElement lineElement, LineServant lineServant) {
+                System.out.println("After1: " + lineElement + ", " + lineServant);
+                System.out.println("");
+
+            }
+        });
+
+        group1.addAcdContextListener(new ExceptionAcdContextListener() {
+            @Override
+            public void exception(Exception e) {
+                e.printStackTrace();
             }
         });
 
