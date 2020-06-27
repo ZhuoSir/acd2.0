@@ -1,12 +1,13 @@
 package com.yuntongxun.acd.context;
 
-public abstract class AbstractAcdContext implements AcdContext {
+import com.yuntongxun.acd.context.listener.AfterLineAcdContextListener;
+import com.yuntongxun.acd.context.listener.ExceptionAcdContextListener;
+import com.yuntongxun.acd.context.listener.PreLineAcdContextListener;
 
-//    protected AbstractLineElementQueue lineElementQueue;
-//
-//    protected AbstractServantDistributor servantDistributor;
-//
-//    protected CallLineServantProcess callLineServantProcess;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class AbstractAcdContext implements AcdContext {
 
     private boolean notifySymbol;
 
@@ -18,62 +19,17 @@ public abstract class AbstractAcdContext implements AcdContext {
 
     private int notifyThreadPoolSize = 10;
 
+    private List<PreLineAcdContextListener> preLineAcdContextListeners;
+
+    private List<AfterLineAcdContextListener> afterLineAcdContextListeners;
+
+    private List<ExceptionAcdContextListener> exceptionAcdContextListeners;
+
     public AbstractAcdContext() {
+        preLineAcdContextListeners = new ArrayList<>();
+        afterLineAcdContextListeners = new ArrayList<>();
+        exceptionAcdContextListeners = new ArrayList<>();
     }
-
-//    public AbstractAcdContext(AbstractLineElementQueue lineElementQueue,
-//                              AbstractServantDistributor servantDistributor,
-//                              CallLineServantProcess callLineServantProcess,
-//                              ServiceProxy serviceProxy) {
-//        this.lineElementQueue = lineElementQueue;
-//        this.servantDistributor = servantDistributor;
-//        this.callLineServantProcess = callLineServantProcess;
-//        this.serviceProxy = serviceProxy;
-//
-//        init();
-//    }
-//
-//    private void init() {
-//        if (serviceProxy != null) {
-//            if (this.lineElementQueue != null) {
-//                this.lineElementQueue.setQueueNotifyProxy(serviceProxy);
-//            }
-//        }
-//    }
-
-//    private ServiceProxy serviceProxy;
-
-//    public void setLineElementQueue(AbstractLineElementQueue lineElementQueue) {
-//        this.lineElementQueue = lineElementQueue;
-//    }
-//
-//    public void setServantDistributor(AbstractServantDistributor servantDistributor) {
-//        this.servantDistributor = servantDistributor;
-//    }
-//
-//    public void setCallLineServantProcess(CallLineServantProcess callLineServantProcess) {
-//        this.callLineServantProcess = callLineServantProcess;
-//    }
-
-//    @Override
-//    public LineElementQueue getLineElementQueue() {
-//        return lineElementQueue;
-//    }
-//
-//    @Override
-//    public ServantDistributor getServantDistributor() {
-//        return servantDistributor;
-//    }
-//
-//    @Override
-//    public CallLineServantProcess getCallLineServantProcess() {
-//        return callLineServantProcess;
-//    }
-//
-//    @Override
-//    public ServiceProxy getServiceProxy() {
-//        return serviceProxy;
-//    }
 
     @Override
     public boolean isNotify() {
@@ -90,19 +46,76 @@ public abstract class AbstractAcdContext implements AcdContext {
         return sychSymbol;
     }
 
+    public boolean isNotifySymbol() {
+        return notifySymbol;
+    }
+
     public void setNotifySymbol(boolean notifySymbol) {
         this.notifySymbol = notifySymbol;
+    }
+
+    public boolean isCallAbleSymbol() {
+        return callAbleSymbol;
     }
 
     public void setCallAbleSymbol(boolean callAbleSymbol) {
         this.callAbleSymbol = callAbleSymbol;
     }
 
+    public boolean isSychSymbol() {
+        return sychSymbol;
+    }
+
     public void setSychSymbol(boolean sychSymbol) {
         this.sychSymbol = sychSymbol;
     }
 
+    public String getContextId() {
+        return ContextId;
+    }
+
+    public void setContextId(String contextId) {
+        ContextId = contextId;
+    }
+
     public int getNotifyThreadPoolSize() {
         return notifyThreadPoolSize;
+    }
+
+    public void setNotifyThreadPoolSize(int notifyThreadPoolSize) {
+        this.notifyThreadPoolSize = notifyThreadPoolSize;
+    }
+
+    public List<PreLineAcdContextListener> getPreLineAcdContextListeners() {
+        return preLineAcdContextListeners;
+    }
+
+    public List<AfterLineAcdContextListener> getAfterLineAcdContextListeners() {
+        return afterLineAcdContextListeners;
+    }
+
+    public List<ExceptionAcdContextListener> getExceptionAcdContextListeners() {
+        return exceptionAcdContextListeners;
+    }
+
+    public boolean addPreLineListener(PreLineAcdContextListener preLineAcdContextListener) {
+        if (preLineAcdContextListeners == null) {
+            preLineAcdContextListeners = new ArrayList<>();
+        }
+        return preLineAcdContextListeners.add(preLineAcdContextListener);
+    }
+
+    public boolean addAfterLineListener(AfterLineAcdContextListener afterLineAcdContextListener) {
+        if (afterLineAcdContextListeners == null) {
+            afterLineAcdContextListeners = new ArrayList<>();
+        }
+        return afterLineAcdContextListeners.add(afterLineAcdContextListener);
+    }
+
+    public boolean addExeceptionListeners(ExceptionAcdContextListener exceptionAcdContextListener) {
+        if (exceptionAcdContextListeners == null) {
+            exceptionAcdContextListeners = new ArrayList<>();
+        }
+        return exceptionAcdContextListeners.add(exceptionAcdContextListener);
     }
 }

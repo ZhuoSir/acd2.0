@@ -5,6 +5,9 @@ import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
 import com.yuntongxun.acd.context.AbstractAcdContext;
 import com.yuntongxun.acd.context.AcdContext;
+import com.yuntongxun.acd.context.listener.AfterLineAcdContextListener;
+import com.yuntongxun.acd.context.listener.ExceptionAcdContextListener;
+import com.yuntongxun.acd.context.listener.PreLineAcdContextListener;
 import com.yuntongxun.acd.distribute.AbstractServantDistributor;
 import com.yuntongxun.acd.distribute.DistributeSupport;
 import com.yuntongxun.acd.distribute.ServantDistributor;
@@ -14,6 +17,7 @@ import com.yuntongxun.acd.queue.QueueSupport;
 
 import java.io.Closeable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,6 +99,9 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
                 try {
                     final LineElement theLineElement = lineElementQueue.get();
                     if (theLineElement != null) {
+
+                        preLineWork(theLineElement);
+
                         lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
                         if (acdContext.isCallable()) {
                             if (acdContext.isSycn()) {
@@ -110,19 +117,46 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
                                 });
                             }
                         }
+
+                        afterLineWork(theLineElement, theLineServantTemp);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                    execeptionWork(e);
                 }
             }
         }
     }
 
+
+    private void preLineWork(LineElement lineElement) {
+        List<PreLineAcdContextListener> preLineAcdContextListeners = acdContext.getPreLineAcdContextListeners();
+        for (PreLineAcdContextListener preLine : preLineAcdContextListeners) {
+            preLine.preLine(lineElement);
+        }
+    }
+
+
+    private void afterLineWork(LineElement lineElement, LineServant lineServant) {
+        List<AfterLineAcdContextListener> afterLineAcdContextListeners = acdContext.getAfterLineAcdContextListeners();
+        for (AfterLineAcdContextListener after : afterLineAcdContextListeners) {
+            after.afterLine(lineElement, lineServant);
+        }
+    }
+
+    private void execeptionWork(Exception e) {
+        List<ExceptionAcdContextListener> exceptionAcdContextListeners = acdContext.getExceptionAcdContextListeners();
+        for (ExceptionAcdContextListener exception : exceptionAcdContextListeners) {
+            exception.exception(e);
+        }
+    }
+
+
     private void callProcess(LineElement theLineElement, LineServant theLineServant) {
         callLineServantProcess.callProcess(theLineElement, theLineServant);
     }
 
-    public AcdContext getAcdContext() {
+    public AbstractAcdContext getAcdContext() {
         return acdContext;
     }
 }

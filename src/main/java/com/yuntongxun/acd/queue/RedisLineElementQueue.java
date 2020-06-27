@@ -40,6 +40,7 @@ public class RedisLineElementQueue extends AbstractLineElementQueue {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+
         }
     }
 
@@ -52,6 +53,7 @@ public class RedisLineElementQueue extends AbstractLineElementQueue {
                 element.setWaitingCount(0);
             }
         } finally {
+
         }
     }
 
