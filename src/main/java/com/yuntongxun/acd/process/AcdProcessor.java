@@ -78,56 +78,60 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
 
     @Override
     public void lineProcess() {
-        LineElementQueue        lineElementQueue        = getLineElementQueue();
-        ServantDistributor      servantDistributor      = getServantDistributor();
-        CallLineServantProcess  callLineServantProcess  = getCallLineServantProcess();
 
-        LineServant theLineServant = null;
-        for (;;) {
-            if (Objects.isNull(lineElementQueue)
-                    || Objects.isNull(servantDistributor)
-                    || (acdContext.isCallable() && Objects.isNull(callLineServantProcess))) {
-                break;
-            }
+        try {
+            LineElementQueue        lineElementQueue        = getLineElementQueue();
+            ServantDistributor      servantDistributor      = getServantDistributor();
+            CallLineServantProcess  callLineServantProcess  = getCallLineServantProcess();
 
-            if (theLineServant == null || !theLineServant.isActive()) {
-                theLineServant = servantDistributor.distribute();
-            }
+            LineServant theLineServant = null;
+            for (;;) {
+                if (Objects.isNull(lineElementQueue)
+                        || Objects.isNull(servantDistributor)
+                        || (acdContext.isCallable() && Objects.isNull(callLineServantProcess))) {
+                    break;
+                }
 
-            final LineServant theLineServantTemp = theLineServant;
-            if (null != theLineServantTemp && theLineServantTemp.isActive()) {
-                try {
-                    final LineElement theLineElement = lineElementQueue.get();
-                    if (theLineElement != null) {
+                if (theLineServant == null || !theLineServant.isActive()) {
+                    theLineServant = servantDistributor.distribute();
+                }
 
-                        preLineWork(theLineElement);
+                final LineServant theLineServantTemp = theLineServant;
+                if (null != theLineServantTemp && theLineServantTemp.isActive()) {
+                    try {
+                        final LineElement theLineElement = lineElementQueue.get();
+                        if (theLineElement != null) {
 
-                        lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
-                        if (acdContext.isCallable()) {
-                            if (acdContext.isSycn()) {
-                                callProcess(theLineElement, theLineServantTemp);
-                            } else {
-                                if (null == threadPool) {
-                                    threadPool = Executors.newCachedThreadPool();
-                                }
-                                threadPool.submit(new Runnable() {
-                                    public void run() {
-                                        callProcess(theLineElement, theLineServantTemp);
+                            preLineWork(theLineElement);
+
+                            lineElementQueue.elementDistributed(theLineElement, theLineServantTemp);
+                            if (acdContext.isCallable()) {
+                                if (acdContext.isSycn()) {
+                                    callProcess(theLineElement, theLineServantTemp);
+                                } else {
+                                    if (null == threadPool) {
+                                        threadPool = Executors.newCachedThreadPool();
                                     }
-                                });
+                                    threadPool.submit(new Runnable() {
+                                        public void run() {
+                                            callProcess(theLineElement, theLineServantTemp);
+                                        }
+                                    });
+                                }
                             }
-                        }
 
-                        afterLineWork(theLineElement, theLineServantTemp);
-                    }
-                } catch (Exception e) {
+                            afterLineWork(theLineElement, theLineServantTemp);
+                        }
+                    } catch (Exception e) {
 //                    e.printStackTrace();
-                    execeptionWork(e);
+                        acdContext.execeptionWork(e);
+                    }
                 }
             }
+        } catch (Exception e) {
+            acdContext.execeptionWork(e);
         }
     }
-
 
     private void preLineWork(LineElement lineElement) {
         List<PreLineAcdContextListener> preLineAcdContextListeners = acdContext.getPreLineAcdContextListeners();
@@ -141,13 +145,6 @@ public abstract class AcdProcessor implements AcdProcess, QueueSupport, Distribu
         List<AfterLineAcdContextListener> afterLineAcdContextListeners = acdContext.getAfterLineAcdContextListeners();
         for (AfterLineAcdContextListener after : afterLineAcdContextListeners) {
             after.afterLine(lineElement, lineServant);
-        }
-    }
-
-    private void execeptionWork(Exception e) {
-        List<ExceptionAcdContextListener> exceptionAcdContextListeners = acdContext.getExceptionAcdContextListeners();
-        for (ExceptionAcdContextListener exception : exceptionAcdContextListeners) {
-            exception.exception(e);
         }
     }
 

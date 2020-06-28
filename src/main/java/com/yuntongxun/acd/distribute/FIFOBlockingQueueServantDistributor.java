@@ -30,27 +30,25 @@ public class FIFOBlockingQueueServantDistributor extends AbstractServantDistribu
     }
 
     @Override
-    public LineServant distribute() {
+    public LineServant distribute() throws Exception {
 
         try {
             LineServant servant = lineServantBlockingQueue.take();
             lineServantTable.remove(servant.getServantId());
             return servant;
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw e;
         }
-
-        return null;
     }
 
     @Override
-    public void add(LineServant lineServant) {
+    public void add(LineServant lineServant) throws Exception {
         lineServantBlockingQueue.add(lineServant);
         lineServantTable.put(lineServant.getServantId(), lineServant);
     }
 
     @Override
-    public void add(Collection<LineServant> lineServants) {
+    public void add(Collection<LineServant> lineServants) throws Exception {
         lineServantBlockingQueue.addAll(lineServants);
         for (LineServant lineServant : lineServants) {
             lineServantTable.put(lineServant.getServantId(), lineServant);

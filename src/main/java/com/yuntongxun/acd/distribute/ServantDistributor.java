@@ -7,11 +7,11 @@ import java.util.Collection;
 
 public interface ServantDistributor {
 
-    LineServant distribute();
+    LineServant distribute() throws Exception;
 
-    void add(LineServant lineServant);
+    void add(LineServant lineServant) throws Exception;
 
-    void add(Collection<LineServant> lineServants);
+    void add(Collection<LineServant> lineServants) throws Exception;
 
     Collection<LineServant> lineServantList();
 

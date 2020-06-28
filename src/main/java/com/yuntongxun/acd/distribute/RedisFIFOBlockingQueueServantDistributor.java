@@ -25,21 +25,19 @@ public class RedisFIFOBlockingQueueServantDistributor extends AbstractServantDis
     }
 
     @Override
-    public LineServant distribute() {
+    public LineServant distribute() throws Exception {
 
         try {
             LineServant lineServant = servantRBlockingQueue.take();
             lineServantRMap.remove(lineServant.getServantId());
             return lineServant;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
-
-        return null;
     }
 
     @Override
-    public void add(LineServant lineServant) {
+    public void add(LineServant lineServant) throws Exception {
 
         if (lineServant == null)
             return;
@@ -51,7 +49,7 @@ public class RedisFIFOBlockingQueueServantDistributor extends AbstractServantDis
     }
 
     @Override
-    public void add(Collection<LineServant> lineServants) {
+    public void add(Collection<LineServant> lineServants) throws Exception {
 
         if (lineServants == null || lineServants.isEmpty())
             return;

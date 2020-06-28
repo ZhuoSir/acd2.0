@@ -6,6 +6,8 @@ import com.yuntongxun.acd.context.listener.PreLineAcdContextListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public abstract class AbstractAcdContext implements AcdContext {
 
@@ -24,6 +26,8 @@ public abstract class AbstractAcdContext implements AcdContext {
     private List<AfterLineAcdContextListener> afterLineAcdContextListeners;
 
     private List<ExceptionAcdContextListener> exceptionAcdContextListeners;
+
+    private ExecutorService singleThreadPool = Executors.newSingleThreadExecutor();
 
     public AbstractAcdContext() {
         preLineAcdContextListeners = new ArrayList<>();
@@ -117,5 +121,17 @@ public abstract class AbstractAcdContext implements AcdContext {
             exceptionAcdContextListeners = new ArrayList<>();
         }
         return exceptionAcdContextListeners.add(exceptionAcdContextListener);
+    }
+
+    public void execeptionWork(final Exception e) {
+        singleThreadPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                List<ExceptionAcdContextListener> exceptionAcdContextListeners = getExceptionAcdContextListeners();
+                for (ExceptionAcdContextListener exception : exceptionAcdContextListeners) {
+                    exception.exception(e);
+                }
+            }
+        });
     }
 }

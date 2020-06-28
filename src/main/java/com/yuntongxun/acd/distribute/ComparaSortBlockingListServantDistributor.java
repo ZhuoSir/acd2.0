@@ -38,7 +38,7 @@ public class ComparaSortBlockingListServantDistributor extends AbstractServantDi
     }
 
     @Override
-    public LineServant distribute() {
+    public LineServant distribute() throws InterruptedException {
         final ReentrantLock lock = this.lock;
         LineServant lineServant = null;
         try {
@@ -52,13 +52,11 @@ public class ComparaSortBlockingListServantDistributor extends AbstractServantDi
 
             lineServantTable.remove(lineServant.getServantId());
             return lineServant;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw e;
         } finally {
             lock.unlock();
         }
-
-        return null;
     }
 
     @Override

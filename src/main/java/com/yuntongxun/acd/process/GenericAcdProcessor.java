@@ -44,12 +44,20 @@ public class GenericAcdProcessor extends AcdProcessor {
 
     @Override
     public void addLineServant(LineServant lineServant) {
-        getServantDistributor().add(lineServant);
+        try {
+            getServantDistributor().add(lineServant);
+        } catch (Exception e) {
+            getAcdContext().execeptionWork(e);
+        }
     }
 
     @Override
     public void addLineServants(Collection<LineServant> lineServants) {
-        getServantDistributor().add(lineServants);
+        try {
+            getServantDistributor().add(lineServants);
+        } catch (Exception e) {
+            getAcdContext().execeptionWork(e);
+        }
     }
 
     @Override
