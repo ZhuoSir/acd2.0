@@ -3,6 +3,7 @@ package com.yuntongxun.acd.context;
 import com.yuntongxun.acd.Config.RedisConfig;
 import org.redisson.Redisson;
 import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 
 public class RedisAcdContext extends AbstractAcdContext {
 
@@ -26,7 +27,10 @@ public class RedisAcdContext extends AbstractAcdContext {
 
         if (!redisConfig.isCluster()) {
             Config config = new Config();
-            config.useSingleServer().setAddress(redisConfig.getHosts().get(0));
+            SingleServerConfig singleServerConfig = config.useSingleServer().setAddress(redisConfig.getHosts().get(0));
+            if (redisConfig.getPassword() != null) {
+                singleServerConfig.setPassword(redisConfig.getPassword());
+            }
             redisson = (Redisson) Redisson.create(config);
         }
     }

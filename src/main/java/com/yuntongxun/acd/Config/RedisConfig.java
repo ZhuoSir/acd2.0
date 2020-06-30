@@ -6,6 +6,8 @@ public class RedisConfig {
 
     private boolean isCluster = false;
 
+    private String password;
+
     private List<String> hosts;
 
     public List<String> getHosts() {
@@ -22,5 +24,13 @@ public class RedisConfig {
 
     public void setHosts(List<String> hosts) {
         this.hosts = hosts;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

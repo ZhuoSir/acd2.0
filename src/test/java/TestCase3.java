@@ -42,7 +42,7 @@ public class TestCase3 {
         redisConfig.setCluster(false);
         redisConfig.setHosts(Arrays.asList("redis://127.0.0.1:6379"));
 
-        RedisAcdGroup group1 = AcdGroupFactory.redisFifoBlokingQueueAcdGroup("group1", serviceProxy, redisConfig);
+        RedisAcdGroup group1 = AcdGroupFactory.redisFifoBlockingQueueAcdGroup("group1", serviceProxy, redisConfig);
 
         AcdCenter acdCenter = new GenericAcdCenter();
         acdCenter.putGroup(group1);

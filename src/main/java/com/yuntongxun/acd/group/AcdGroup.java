@@ -2,10 +2,7 @@ package com.yuntongxun.acd.group;
 
 import com.yuntongxun.acd.common.LineElement;
 import com.yuntongxun.acd.common.LineServant;
-import com.yuntongxun.acd.context.listener.AcdContextListener;
-import com.yuntongxun.acd.context.listener.AfterLineAcdContextListener;
-import com.yuntongxun.acd.context.listener.ExceptionAcdContextListener;
-import com.yuntongxun.acd.context.listener.PreLineAcdContextListener;
+import com.yuntongxun.acd.context.listener.*;
 import com.yuntongxun.acd.distribute.DistributeSupport;
 import com.yuntongxun.acd.process.AcdProcessor;
 import com.yuntongxun.acd.queue.QueueSupport;
@@ -62,9 +59,16 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
     }
 
     public void addAcdContextListener(AcdContextListener acdContextListener) {
+
+        if (acdContextListener instanceof FullStackAcdContextListener) {
+            acdProcessor.getAcdContext().addPreLineListener((PreLineAcdContextListener) acdContextListener);
+            acdProcessor.getAcdContext().addAfterLineListener((AfterLineAcdContextListener) acdContextListener);
+            acdProcessor.getAcdContext().addExeceptionListeners((ExceptionAcdContextListener) acdContextListener);
+        }
+
         if (acdContextListener instanceof PreLineAcdContextListener) {
             acdProcessor.getAcdContext().addPreLineListener((PreLineAcdContextListener) acdContextListener);
-        } else if (acdContextListener instanceof  AfterLineAcdContextListener) {
+        } else if (acdContextListener instanceof AfterLineAcdContextListener) {
             acdProcessor.getAcdContext().addAfterLineListener((AfterLineAcdContextListener) acdContextListener);
         } else if (acdContextListener instanceof ExceptionAcdContextListener) {
             acdProcessor.getAcdContext().addExeceptionListeners((ExceptionAcdContextListener) acdContextListener);

@@ -20,8 +20,8 @@ public class RedisFIFOBlockingQueueServantDistributor extends AbstractServantDis
 
         redisson                = acdContext.getRedisson();
         final String contextId  = acdContext.ContextId;
-        servantRBlockingQueue   = redisson.getBlockingQueue(contextId + "-servantqueue");
-        lineServantRMap         = redisson.getMap(contextId + "-servantmap");
+        servantRBlockingQueue   = redisson.getBlockingQueue(contextId + "-servant-queue");
+        lineServantRMap         = redisson.getMap(contextId + "-servant-map");
     }
 
     @Override

@@ -18,7 +18,11 @@ public class AcdGroupFactory {
         return new FIFOBlockingQueueAcdGroup(groupName, serviceProxy, lineServantComparator);
     }
 
-    public static RedisAcdGroup redisFifoBlokingQueueAcdGroup(String groupName, ServiceProxy serviceProxy, RedisConfig redisConfig) {
+    public static RedisAcdGroup redisFifoBlockingQueueAcdGroup(String groupName, ServiceProxy serviceProxy, RedisConfig redisConfig) {
         return new RedisAcdGroup(groupName, serviceProxy, redisConfig);
+    }
+
+    public static RedisAcdGroup redisComparateBlockingQueueAcdGroup(String groupName, ServiceProxy serviceProxy, RedisConfig redisConfig, LineServantComparator lineServantComparator) {
+        return new RedisAcdGroup(groupName, serviceProxy, redisConfig, lineServantComparator);
     }
 }
