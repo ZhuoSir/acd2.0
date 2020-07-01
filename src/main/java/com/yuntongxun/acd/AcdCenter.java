@@ -1,5 +1,6 @@
 package com.yuntongxun.acd;
 
+import com.yuntongxun.acd.context.listener.AcdContextListener;
 import com.yuntongxun.acd.group.AcdGroup;
 
 import java.util.Collection;
@@ -19,6 +20,8 @@ public interface AcdCenter {
     void putGroupAndStart(Collection<AcdGroup> acdGroupCollection);
 
     void removeGroupAndStop(Collection<String> groupNames);
+
+    void addAcdContextListener(AcdContextListener acdContextListener);
 
     void start();
 

@@ -1,5 +1,6 @@
 package com.yuntongxun.acd;
 
+import com.yuntongxun.acd.context.listener.AcdContextListener;
 import com.yuntongxun.acd.group.AcdGroup;
 
 import java.util.Collection;
@@ -85,5 +86,14 @@ public abstract class AbstractAcdCenter implements AcdCenter {
     @Override
     public AcdGroup getGroup(String groupName) {
         return acdGroupTable.get(groupName);
+    }
+
+
+    public void addAcdContextListener(AcdContextListener acdContextListener) {
+        Iterator<String> groupIdIterator = acdGroupTable.keySet().iterator();
+        while (groupIdIterator.hasNext()) {
+            AcdGroup acdGroup = acdGroupTable.get(groupIdIterator.next());
+            acdGroup.addAcdContextListener(acdContextListener);
+        }
     }
 }
