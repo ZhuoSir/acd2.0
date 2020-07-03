@@ -64,14 +64,14 @@ public abstract class AcdGroup implements QueueSupport, DistributeSupport, Threa
             acdProcessor.getAcdContext().addPreLineListener((PreLineAcdContextListener) acdContextListener);
             acdProcessor.getAcdContext().addAfterLineListener((AfterLineAcdContextListener) acdContextListener);
             acdProcessor.getAcdContext().addExeceptionListeners((ExceptionAcdContextListener) acdContextListener);
-        }
-
-        if (acdContextListener instanceof PreLineAcdContextListener) {
-            acdProcessor.getAcdContext().addPreLineListener((PreLineAcdContextListener) acdContextListener);
-        } else if (acdContextListener instanceof AfterLineAcdContextListener) {
-            acdProcessor.getAcdContext().addAfterLineListener((AfterLineAcdContextListener) acdContextListener);
-        } else if (acdContextListener instanceof ExceptionAcdContextListener) {
-            acdProcessor.getAcdContext().addExeceptionListeners((ExceptionAcdContextListener) acdContextListener);
+        } else {
+            if (acdContextListener instanceof PreLineAcdContextListener) {
+                acdProcessor.getAcdContext().addPreLineListener((PreLineAcdContextListener) acdContextListener);
+            } else if (acdContextListener instanceof AfterLineAcdContextListener) {
+                acdProcessor.getAcdContext().addAfterLineListener((AfterLineAcdContextListener) acdContextListener);
+            } else if (acdContextListener instanceof ExceptionAcdContextListener) {
+                acdProcessor.getAcdContext().addExeceptionListeners((ExceptionAcdContextListener) acdContextListener);
+            }
         }
     }
 
